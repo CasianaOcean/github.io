@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>inkandinstinct | Fluid Strategy</title>
+    <title>inkandinstinct | Global Marketing & Communications</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Dancing+Script:wght@700&family=Inter:wght@300;600&display=swap" rel="stylesheet">
 
     <style>
@@ -17,35 +19,36 @@
         body, html {
             margin: 0;
             padding: 0;
-            background-color: var(--paper-white);
+            background-color: #e5e5e5; /* Slightly darker base to make the white card pop */
             color: var(--ink-black);
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
+            height: 100%;
+        }
+
+        /* The Canvas: Now with higher contrast for that "heavy ink" look */
+        #ink-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
             height: 100vh;
-        }
-
-        /* The Background Layer */
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        /* The Frosted Layer */
-        .frosted-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            backdrop-filter: blur(50px) saturate(120%);
-            -webkit-backdrop-filter: blur(50px);
-            background: rgba(255, 255, 255, 0.2);
+            z-index: 1; 
+            filter: blur(10px) contrast(2.5); 
             pointer-events: none;
+        }
+
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            box-sizing: border-box;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 100;
         }
 
         header {
@@ -57,107 +60,174 @@
             z-index: 10;
         }
 
+        /* THE GLASS OVERLAY CARD */
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            padding: 80px 60px;
-            border-radius: 40px;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.15);
+            background: rgba(255, 255, 255, 0.65); /* Semi-transparent */
+            backdrop-filter: blur(25px); /* This creates the "frost" effect */
+            -webkit-backdrop-filter: blur(25px);
+            padding: 60px 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             text-align: center;
             max-width: 800px;
-            width: 85%;
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            width: 90%;
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 10vw, 6rem);
+            font-size: clamp(3rem, 10vw, 6.5rem);
             font-weight: 700;
             margin: 0;
             letter-spacing: -3px;
-            line-height: 0.9;
         }
 
         .cursive {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-size: clamp(1.8rem, 5vw, 3.2rem);
             color: var(--accent-red);
             display: block;
-            margin-top: 10px;
+            margin-top: 5px;
             margin-bottom: 30px;
         }
 
         .intro-text p {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 400;
-            color: #111;
-            margin-bottom: 30px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #222;
         }
 
         .contact-link {
+            display: inline-block;
             color: var(--ink-black);
             text-decoration: none;
             font-weight: 700;
-            border-bottom: 3px solid var(--accent-red);
-            transition: 0.3s;
+            border-bottom: 2px solid var(--accent-red);
+            padding-bottom: 2px;
+            transition: all 0.3s;
         }
 
-        .contact-link:hover { border-bottom-color: var(--ink-black); }
+        .contact-link:hover {
+            color: var(--accent-red);
+        }
+
+        /* Sections below the fold */
+        .main-content {
+            background: white;
+            padding: 100px 10%;
+            position: relative;
+            z-index: 20;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .service-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="canvas-container">
-        <canvas id="fluid-canvas"></canvas>
-    </div>
-    <div class="frosted-overlay"></div>
+    <canvas id="ink-canvas"></canvas>
+
+    <nav>
+        <div>INKANDINSTINCT.XYZ</div>
+        <div>GLOBAL COMMUNICATIONS</div>
+    </nav>
 
     <header>
         <div class="glass-card">
             <h1>inkandinstinct</h1>
             <span class="cursive">strategy with soul.</span>
+            
             <div class="intro-text">
-                <p>Marketing and Communications helping brands with strategy, storytelling, and digital presence... in web2 and web3.</p>
+                <p>Marketing and Communications helping brands with strategy,<br> 
+                storytelling, and digital presence... in web2 and web3.</p>
                 <a href="mailto:casiana@inkandinstinct.xyz" class="contact-link">casiana@inkandinstinct.xyz</a>
             </div>
         </div>
     </header>
 
-    <script src="https://cdn.jsdelivr.net/gh/v0id-code/fluid-simulation-js/fluid-simulation.js"></script>
-    
-    <script>
-        // Configuration for that "Ink in Water" feel
-        window.fluidSimulationOptions = {
-            SIM_RESOLUTION: 128,
-            DYE_RESOLUTION: 512,
-            DENSITY_DISSIPATION: 0.97, // How long the ink stays
-            VELOCITY_DISSIPATION: 0.98,
-            PRESSURE: 0.8,
-            CURL: 30, // Higher curl = more "ink tendrils"
-            SPLAT_RADIUS: 0.35,
-            SPLAT_FORCE: 6000,
-            SHADING: true,
-            COLORFUL: false, // Keep it monochrome
-            PAUSED: false,
-            BACK_COLOR: { r: 252, g: 250, b: 247 }, // Matches your paper-white
-            TRANSPARENT: false,
-            BLOOM: false
-        };
+    <main class="main-content">
+        <div class="services-grid">
+            <div class="service-card"><h3>Brand Identity</h3><p>Visual and verbal systems for modern markets.</p></div>
+            <div class="service-card"><h3>Reputation</h3><p>Strategic narrative and perception management.</p></div>
+            <div class="service-card"><h3>Public Speaking</h3><p>Coaching for leadership and stage presence.</p></div>
+            <div class="service-card"><h3>PR & Marketing</h3><p>Bridging technology and human storytelling.</p></div>
+        </div>
+    </main>
 
-        // Initialize simulation
-        const canvas = document.getElementById('fluid-canvas');
-        // The script we loaded automatically attaches to a canvas and looks for these options
-        
-        // Custom splat to trigger ink on load
-        function initialInk() {
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 4;
-            // Trigger a few big drops
-            if (window.multipleSplats) {
-                window.multipleSplats(5);
+    <script>
+        const canvas = document.getElementById('ink-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor(x, y, isAuto = false) {
+                this.x = x;
+                this.y = y;
+                // Made these even larger and more "cloud-like"
+                this.size = isAuto ? Math.random() * 100 + 50 : Math.random() * 50 + 20;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.opacity = 0.7; 
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.size += 0.8; // Fast dispersion
+                this.opacity -= 0.0025;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(10, 10, 12, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
             }
         }
 
-        window.onload = initialInk;
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].opacity <= 0) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.6) {
+                particles.push(new Particle(e.x, e.y));
+            }
+        });
+
+        // Heavy auto-drops to create the "swirling cloud" effect
+        setInterval(() => {
+            if (particles.length < 50) {
+                particles.push(new Particle(Math.random() * canvas.width, -100, true));
+            }
+        }, 250);
+
+        window.addEventListener('resize', init);
+        init();
+        animate();
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>inkandinstinct | Global Marketing & Communications</title>
+    <title>inkandinstinct | Fluid Strategy</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Dancing+Script:wght@700&family=Inter:wght@300;600&display=swap" rel="stylesheet">
 
@@ -24,6 +24,7 @@
             height: 100vh;
         }
 
+        /* The Background Layer */
         #canvas-container {
             position: fixed;
             top: 0;
@@ -33,7 +34,7 @@
             z-index: 1;
         }
 
-        /* The Heavy Frost Layer - makes the ink look "in water" */
+        /* The Frosted Layer */
         .frosted-overlay {
             position: fixed;
             top: 0;
@@ -41,9 +42,9 @@
             width: 100%;
             height: 100%;
             z-index: 2;
-            backdrop-filter: blur(40px) saturate(110%);
-            -webkit-backdrop-filter: blur(40px);
-            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(50px) saturate(120%);
+            -webkit-backdrop-filter: blur(50px);
+            background: rgba(255, 255, 255, 0.2);
             pointer-events: none;
         }
 
@@ -56,42 +57,39 @@
             z-index: 10;
         }
 
-        /* Matches your screenshot perfectly */
         .glass-card {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.85);
             padding: 80px 60px;
-            border-radius: 50px;
-            box-shadow: 0 40px 120px rgba(0,0,0,0.1);
+            border-radius: 40px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.15);
             text-align: center;
-            max-width: 850px;
-            width: 90%;
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            max-width: 800px;
+            width: 85%;
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 10vw, 6.5rem);
+            font-size: clamp(3rem, 10vw, 6rem);
             font-weight: 700;
             margin: 0;
-            letter-spacing: -4px;
-            line-height: 0.85;
+            letter-spacing: -3px;
+            line-height: 0.9;
         }
 
         .cursive {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.8rem, 5vw, 3.8rem);
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
             color: var(--accent-red);
             display: block;
             margin-top: 10px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .intro-text p {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 400;
-            color: #1a1a1a;
-            line-height: 1.5;
+            color: #111;
             margin-bottom: 30px;
         }
 
@@ -100,35 +98,16 @@
             text-decoration: none;
             font-weight: 700;
             border-bottom: 3px solid var(--accent-red);
-            padding-bottom: 2px;
             transition: 0.3s;
         }
 
-        .contact-link:hover { opacity: 0.7; }
-
-        nav {
-            position: fixed;
-            width: 100%;
-            padding: 30px 5%;
-            display: flex;
-            justify-content: space-between;
-            z-index: 100;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.6;
-        }
+        .contact-link:hover { border-bottom-color: var(--ink-black); }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div>INKANDINSTINCT.XYZ</div>
-        <div>GLOBAL COMMUNICATIONS</div>
-    </nav>
-
     <div id="canvas-container">
-        <canvas id="fluid-canvas" style="width: 100%; height: 100%;"></canvas>
+        <canvas id="fluid-canvas"></canvas>
     </div>
     <div class="frosted-overlay"></div>
 
@@ -146,32 +125,39 @@
     <script src="https://cdn.jsdelivr.net/gh/v0id-code/fluid-simulation-js/fluid-simulation.js"></script>
     
     <script>
-        // High-density "Ink in Water" configuration
+        // Configuration for that "Ink in Water" feel
         window.fluidSimulationOptions = {
             SIM_RESOLUTION: 128,
-            DYE_RESOLUTION: 1024,
-            DENSITY_DISSIPATION: 0.98, // Ink stays visible longer
-            VELOCITY_DISSIPATION: 0.99,
+            DYE_RESOLUTION: 512,
+            DENSITY_DISSIPATION: 0.97, // How long the ink stays
+            VELOCITY_DISSIPATION: 0.98,
             PRESSURE: 0.8,
-            CURL: 45, // MAX CURL for those swirling tendrils
-            SPLAT_RADIUS: 0.4,
-            SPLAT_FORCE: 8000,
+            CURL: 30, // Higher curl = more "ink tendrils"
+            SPLAT_RADIUS: 0.35,
+            SPLAT_FORCE: 6000,
             SHADING: true,
-            COLORFUL: false,
+            COLORFUL: false, // Keep it monochrome
             PAUSED: false,
-            BACK_COLOR: { r: 252, g: 250, b: 247 },
+            BACK_COLOR: { r: 252, g: 250, b: 247 }, // Matches your paper-white
             TRANSPARENT: false,
             BLOOM: false
         };
 
-        // Create heavy initial splats
-        window.onload = () => {
-            setTimeout(() => {
-                if (window.multipleSplats) {
-                    window.multipleSplats(8); // Plumes of ink on load
-                }
-            }, 500);
-        };
+        // Initialize simulation
+        const canvas = document.getElementById('fluid-canvas');
+        // The script we loaded automatically attaches to a canvas and looks for these options
+        
+        // Custom splat to trigger ink on load
+        function initialInk() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 4;
+            // Trigger a few big drops
+            if (window.multipleSplats) {
+                window.multipleSplats(5);
+            }
+        }
+
+        window.onload = initialInk;
     </script>
 </body>
 </html>

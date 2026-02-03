@@ -14,7 +14,6 @@
             --ink-black: #0a0a0c;
             --paper-white: #fcfaf7;
             --accent-red: #8b0000;
-            --soft-gray: #e0ddd9;
         }
 
         body, html {
@@ -23,10 +22,10 @@
             background-color: var(--paper-white);
             color: var(--ink-black);
             font-family: 'Inter', sans-serif;
-            line-height: 1.6;
             overflow-x: hidden;
         }
 
+        /* Adjusted filter: lowered blur, increased contrast to make ink "pop" */
         #ink-canvas {
             position: fixed;
             top: 0;
@@ -34,22 +33,20 @@
             width: 100vw;
             height: 100vh;
             z-index: -1;
-            filter: blur(18px) contrast(1.6);
+            filter: blur(12px) contrast(1.8); 
             pointer-events: none;
-            opacity: 0.6;
         }
 
         nav {
-            position: fixed;
+            position: absolute;
             width: 100%;
-            padding: 25px 5%;
+            padding: 30px 5%;
             display: flex;
             justify-content: space-between;
             box-sizing: border-box;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 2px;
-            z-index: 100;
         }
 
         header {
@@ -67,8 +64,7 @@
             font-size: clamp(3.5rem, 12vw, 7.5rem);
             font-weight: 700;
             margin: 0;
-            letter-spacing: -4px;
-            line-height: 0.9;
+            letter-spacing: -3px;
         }
 
         .cursive {
@@ -81,70 +77,38 @@
         }
 
         .intro-text {
-            max-width: 650px;
+            max-width: 700px;
             font-size: 1.25rem;
-            font-weight: 300;
-            padding: 20px;
+            font-weight: 400;
+            line-height: 1.6;
         }
 
         .contact-link {
+            display: inline-block;
+            margin-top: 20px;
             color: var(--ink-black);
             text-decoration: none;
             font-weight: 600;
             border-bottom: 2px solid var(--accent-red);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .contact-link:hover {
-            color: var(--accent-red);
-            border-bottom-color: var(--ink-black);
+            padding-bottom: 2px;
         }
 
         .main-content {
             background: white;
-            padding: 120px 10%;
+            padding: 100px 10%;
             position: relative;
             z-index: 2;
-            box-shadow: 0 -20px 50px rgba(0,0,0,0.05);
         }
 
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 5rem;
-            margin-bottom: 80px;
+            gap: 4rem;
         }
 
         .service-card h3 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .service-card p {
-            font-weight: 300;
-            color: #333;
-        }
-
-        footer {
-            padding: 60px 10%;
-            text-align: center;
-            font-size: 0.8rem;
-            color: #777;
-            background: #fff;
-        }
-
-        .legal-footer {
-            margin-top: 40px;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        @media (max-width: 768px) {
-            header { height: auto; padding: 180px 10% 100px; }
-            .services-grid { gap: 3rem; }
         }
     </style>
 </head>
@@ -153,8 +117,8 @@
     <canvas id="ink-canvas"></canvas>
 
     <nav>
-        <div>inkandinstinct.xyz</div>
-        <div>Global Communications</div>
+        <div>INKANDINSTINCT.XYZ</div>
+        <div>GLOBAL COMMUNICATIONS</div>
     </nav>
 
     <header>
@@ -162,12 +126,9 @@
         <span class="cursive">strategy with soul.</span>
         
         <div class="intro-text">
-            <p>
-                <strong>Marketing and Communications</strong> helping brands with strategy, storytelling, and digital presence... in web2 and web3.
-            </p>
-            <p style="margin-top: 20px;">
-                <a href="mailto:casiana@inkandinstinct.xyz" class="contact-link">casiana@inkandinstinct.xyz</a>
-            </p>
+            <p>Marketing and Communications helping brands with strategy,<br> 
+            storytelling, and digital presence... in web2 and web3.</p>
+            <a href="mailto:casiana@inkandinstinct.xyz" class="contact-link">casiana@inkandinstinct.xyz</a>
         </div>
     </header>
 
@@ -175,28 +136,21 @@
         <div class="services-grid">
             <div class="service-card">
                 <h3>Brand Identity</h3>
-                <p>Visual systems and brand voices that cut through the noise of digital markets.</p>
+                <p>Visual and verbal systems for modern markets.</p>
             </div>
             <div class="service-card">
                 <h3>Reputation</h3>
-                <p>Mastering the narrative and managing public perception with precision.</p>
+                <p>Strategic narrative and perception management.</p>
             </div>
             <div class="service-card">
                 <h3>Public Speaking</h3>
-                <p>Courses and coaching designed for leaders to command digital and physical stages.</p>
+                <p>Coaching for leadership and stage presence.</p>
             </div>
             <div class="service-card">
                 <h3>PR & Marketing</h3>
-                <p>Strategic storytelling that connects complex tech with human instinct.</p>
+                <p>Bridging technology and human storytelling.</p>
             </div>
         </div>
-
-        <footer id="legal">
-            <p>&copy; 2026 Ink and Instinct. All Rights Reserved.</p>
-            <div class="legal-footer">
-                <a href="mailto:casiana@inkandinstinct.xyz" style="color:#777; text-decoration:none;">Contact for Terms of Service</a>
-            </div>
-        </footer>
     </main>
 
     <script>
@@ -213,16 +167,17 @@
             constructor(x, y, isAuto = false) {
                 this.x = x;
                 this.y = y;
-                this.size = isAuto ? Math.random() * 60 + 20 : Math.random() * 30 + 10;
-                this.speedX = Math.random() * 1.5 - 0.75;
-                this.speedY = Math.random() * 1 + 0.3;
-                this.opacity = isAuto ? 0.3 : 0.5;
+                // Made particles larger and darker
+                this.size = isAuto ? Math.random() * 80 + 40 : Math.random() * 40 + 20;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 1.2 + 0.5;
+                this.opacity = 0.6; // Increased from 0.3
             }
             update() {
                 this.y += this.speedY;
                 this.x += this.speedX;
-                this.size += 0.4;
-                this.opacity -= 0.0015;
+                this.size += 0.5;
+                this.opacity -= 0.002;
             }
             draw() {
                 ctx.fillStyle = `rgba(10, 10, 12, ${this.opacity})`;
@@ -245,18 +200,17 @@
             requestAnimationFrame(animate);
         }
 
+        // Mouse trigger
         window.addEventListener('mousemove', (e) => {
-            if (Math.random() > 0.8) {
-                particles.push(new Particle(e.x, e.y));
-            }
+            if (Math.random() > 0.7) particles.push(new Particle(e.x, e.y));
         });
 
-        // Consistent auto-drop for visual interest
+        // More frequent auto-drops to ensure it's visible on load
         setInterval(() => {
-            if (particles.length < 25) {
-                particles.push(new Particle(Math.random() * canvas.width, -50, true));
+            if (particles.length < 40) {
+                particles.push(new Particle(Math.random() * canvas.width, -100, true));
             }
-        }, 600);
+        }, 400);
 
         window.addEventListener('resize', init);
         init();

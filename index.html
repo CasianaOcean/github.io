@@ -19,22 +19,37 @@
         body, html {
             margin: 0;
             padding: 0;
-            background-color: #e5e5e5; /* Slightly darker base to make the white card pop */
+            background-color: #fff;
             color: var(--ink-black);
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            height: 100%;
+            overflow: hidden; /* Keeps the focus on the hero for this look */
+            height: 100vh;
+            width: 100vw;
         }
 
-        /* The Canvas: Now with higher contrast for that "heavy ink" look */
+        /* LAYER 1: The Raw Ink (Behind everything) */
         #ink-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 1; 
-            filter: blur(10px) contrast(2.5); 
+            z-index: 1;
+            /* This contrast creates the "liquid" merging effect */
+            filter: blur(8px) contrast(20); 
+            pointer-events: none;
+        }
+
+        /* LAYER 2: The Global Blur (Creates the smoky atmosphere) */
+        .smoke-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 2;
+            backdrop-filter: blur(40px) saturate(100%);
+            -webkit-backdrop-filter: blur(40px);
             pointer-events: none;
         }
 
@@ -49,6 +64,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             z-index: 100;
+            opacity: 0.8;
         }
 
         header {
@@ -60,43 +76,50 @@
             z-index: 10;
         }
 
-        /* THE GLASS OVERLAY CARD */
+        /* LAYER 3: The Content Card */
         .glass-card {
-            background: rgba(255, 255, 255, 0.65); /* Semi-transparent */
-            backdrop-filter: blur(25px); /* This creates the "frost" effect */
-            -webkit-backdrop-filter: blur(25px);
-            padding: 60px 40px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 80px 60px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
             text-align: center;
-            max-width: 800px;
-            width: 90%;
+            max-width: 900px;
+            width: 85%;
+            animation: cardFadeIn 1.2s ease-out;
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 10vw, 6.5rem);
+            font-size: clamp(3.5rem, 12vw, 7rem);
             font-weight: 700;
             margin: 0;
-            letter-spacing: -3px;
+            letter-spacing: -4px;
+            line-height: 0.9;
         }
 
         .cursive {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(1.8rem, 5vw, 3.2rem);
+            font-size: clamp(2rem, 6vw, 4rem);
             color: var(--accent-red);
             display: block;
-            margin-top: 5px;
-            margin-bottom: 30px;
+            margin-top: 10px;
+            margin-bottom: 40px;
         }
 
         .intro-text p {
-            font-size: 1.15rem;
-            font-weight: 400;
+            font-size: 1.3rem;
+            font-weight: 300;
             line-height: 1.6;
-            margin-bottom: 25px;
-            color: #222;
+            margin-bottom: 30px;
+            color: #111;
         }
 
         .contact-link {
@@ -104,39 +127,27 @@
             color: var(--ink-black);
             text-decoration: none;
             font-weight: 700;
-            border-bottom: 2px solid var(--accent-red);
+            border-bottom: 3px solid var(--accent-red);
             padding-bottom: 2px;
             transition: all 0.3s;
+            font-size: 1.1rem;
         }
 
         .contact-link:hover {
-            color: var(--accent-red);
+            letter-spacing: 1px;
+            border-bottom-color: var(--ink-black);
         }
 
-        /* Sections below the fold */
-        .main-content {
-            background: white;
-            padding: 100px 10%;
-            position: relative;
-            z-index: 20;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-        }
-
-        .service-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            margin-bottom: 10px;
+        @media (max-width: 768px) {
+            .glass-card { padding: 40px 20px; }
+            h1 { letter-spacing: -2px; }
         }
     </style>
 </head>
 <body>
 
     <canvas id="ink-canvas"></canvas>
+    <div class="smoke-overlay"></div>
 
     <nav>
         <div>INKANDINSTINCT.XYZ</div>
@@ -156,15 +167,6 @@
         </div>
     </header>
 
-    <main class="main-content">
-        <div class="services-grid">
-            <div class="service-card"><h3>Brand Identity</h3><p>Visual and verbal systems for modern markets.</p></div>
-            <div class="service-card"><h3>Reputation</h3><p>Strategic narrative and perception management.</p></div>
-            <div class="service-card"><h3>Public Speaking</h3><p>Coaching for leadership and stage presence.</p></div>
-            <div class="service-card"><h3>PR & Marketing</h3><p>Bridging technology and human storytelling.</p></div>
-        </div>
-    </main>
-
     <script>
         const canvas = document.getElementById('ink-canvas');
         const ctx = canvas.getContext('2d');
@@ -179,17 +181,17 @@
             constructor(x, y, isAuto = false) {
                 this.x = x;
                 this.y = y;
-                // Made these even larger and more "cloud-like"
-                this.size = isAuto ? Math.random() * 100 + 50 : Math.random() * 50 + 20;
-                this.speedX = Math.random() * 3 - 1.5;
-                this.speedY = Math.random() * 1.5 + 0.5;
-                this.opacity = 0.7; 
+                // Larger sizes for the "plume" effect
+                this.size = isAuto ? Math.random() * 120 + 60 : Math.random() * 60 + 30;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 1 + 0.2;
+                this.opacity = isAuto ? 0.8 : 1; 
             }
             update() {
                 this.y += this.speedY;
                 this.x += this.speedX;
-                this.size += 0.8; // Fast dispersion
-                this.opacity -= 0.0025;
+                this.size += 1.2; // Fast dispersion creates the smoke look
+                this.opacity -= 0.003;
             }
             draw() {
                 ctx.fillStyle = `rgba(10, 10, 12, ${this.opacity})`;
@@ -213,17 +215,17 @@
         }
 
         window.addEventListener('mousemove', (e) => {
-            if (Math.random() > 0.6) {
+            if (Math.random() > 0.5) {
                 particles.push(new Particle(e.x, e.y));
             }
         });
 
-        // Heavy auto-drops to create the "swirling cloud" effect
+        // Constant heavy "ink plumes" from the top
         setInterval(() => {
-            if (particles.length < 50) {
+            if (particles.length < 60) {
                 particles.push(new Particle(Math.random() * canvas.width, -100, true));
             }
-        }, 250);
+        }, 150);
 
         window.addEventListener('resize', init);
         init();

@@ -19,26 +19,27 @@
         body, html {
             margin: 0;
             padding: 0;
-            background-color: var(--paper-white);
+            background-color: #e5e5e5; /* Slightly darker base to make the white card pop */
             color: var(--ink-black);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            height: 100%;
         }
 
-        /* Adjusted filter: lowered blur, increased contrast to make ink "pop" */
+        /* The Canvas: Now with higher contrast for that "heavy ink" look */
         #ink-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -1;
-            filter: blur(12px) contrast(1.8); 
+            z-index: 1; 
+            filter: blur(10px) contrast(2.5); 
             pointer-events: none;
         }
 
         nav {
-            position: absolute;
+            position: fixed;
             width: 100%;
             padding: 30px 5%;
             display: flex;
@@ -47,21 +48,35 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 2px;
+            z-index: 100;
         }
 
         header {
             height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* THE GLASS OVERLAY CARD */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65); /* Semi-transparent */
+            backdrop-filter: blur(25px); /* This creates the "frost" effect */
+            -webkit-backdrop-filter: blur(25px);
+            padding: 60px 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             text-align: center;
-            padding: 0 10%;
+            max-width: 800px;
+            width: 90%;
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(3.5rem, 12vw, 7.5rem);
+            font-size: clamp(3rem, 10vw, 6.5rem);
             font-weight: 700;
             margin: 0;
             letter-spacing: -3px;
@@ -69,46 +84,53 @@
 
         .cursive {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(2rem, 6vw, 3.8rem);
+            font-size: clamp(1.8rem, 5vw, 3.2rem);
             color: var(--accent-red);
             display: block;
             margin-top: 5px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
-        .intro-text {
-            max-width: 700px;
-            font-size: 1.25rem;
+        .intro-text p {
+            font-size: 1.15rem;
             font-weight: 400;
             line-height: 1.6;
+            margin-bottom: 25px;
+            color: #222;
         }
 
         .contact-link {
             display: inline-block;
-            margin-top: 20px;
             color: var(--ink-black);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             border-bottom: 2px solid var(--accent-red);
             padding-bottom: 2px;
+            transition: all 0.3s;
         }
 
+        .contact-link:hover {
+            color: var(--accent-red);
+        }
+
+        /* Sections below the fold */
         .main-content {
             background: white;
             padding: 100px 10%;
             position: relative;
-            z-index: 2;
+            z-index: 20;
         }
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 4rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
         }
 
         .service-card h3 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -122,34 +144,24 @@
     </nav>
 
     <header>
-        <h1>inkandinstinct</h1>
-        <span class="cursive">strategy with soul.</span>
-        
-        <div class="intro-text">
-            <p>Marketing and Communications helping brands with strategy,<br> 
-            storytelling, and digital presence... in web2 and web3.</p>
-            <a href="mailto:casiana@inkandinstinct.xyz" class="contact-link">casiana@inkandinstinct.xyz</a>
+        <div class="glass-card">
+            <h1>inkandinstinct</h1>
+            <span class="cursive">strategy with soul.</span>
+            
+            <div class="intro-text">
+                <p>Marketing and Communications helping brands with strategy,<br> 
+                storytelling, and digital presence... in web2 and web3.</p>
+                <a href="mailto:casiana@inkandinstinct.xyz" class="contact-link">casiana@inkandinstinct.xyz</a>
+            </div>
         </div>
     </header>
 
     <main class="main-content">
         <div class="services-grid">
-            <div class="service-card">
-                <h3>Brand Identity</h3>
-                <p>Visual and verbal systems for modern markets.</p>
-            </div>
-            <div class="service-card">
-                <h3>Reputation</h3>
-                <p>Strategic narrative and perception management.</p>
-            </div>
-            <div class="service-card">
-                <h3>Public Speaking</h3>
-                <p>Coaching for leadership and stage presence.</p>
-            </div>
-            <div class="service-card">
-                <h3>PR & Marketing</h3>
-                <p>Bridging technology and human storytelling.</p>
-            </div>
+            <div class="service-card"><h3>Brand Identity</h3><p>Visual and verbal systems for modern markets.</p></div>
+            <div class="service-card"><h3>Reputation</h3><p>Strategic narrative and perception management.</p></div>
+            <div class="service-card"><h3>Public Speaking</h3><p>Coaching for leadership and stage presence.</p></div>
+            <div class="service-card"><h3>PR & Marketing</h3><p>Bridging technology and human storytelling.</p></div>
         </div>
     </main>
 
@@ -167,17 +179,17 @@
             constructor(x, y, isAuto = false) {
                 this.x = x;
                 this.y = y;
-                // Made particles larger and darker
-                this.size = isAuto ? Math.random() * 80 + 40 : Math.random() * 40 + 20;
-                this.speedX = Math.random() * 2 - 1;
-                this.speedY = Math.random() * 1.2 + 0.5;
-                this.opacity = 0.6; // Increased from 0.3
+                // Made these even larger and more "cloud-like"
+                this.size = isAuto ? Math.random() * 100 + 50 : Math.random() * 50 + 20;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.opacity = 0.7; 
             }
             update() {
                 this.y += this.speedY;
                 this.x += this.speedX;
-                this.size += 0.5;
-                this.opacity -= 0.002;
+                this.size += 0.8; // Fast dispersion
+                this.opacity -= 0.0025;
             }
             draw() {
                 ctx.fillStyle = `rgba(10, 10, 12, ${this.opacity})`;
@@ -200,17 +212,18 @@
             requestAnimationFrame(animate);
         }
 
-        // Mouse trigger
         window.addEventListener('mousemove', (e) => {
-            if (Math.random() > 0.7) particles.push(new Particle(e.x, e.y));
+            if (Math.random() > 0.6) {
+                particles.push(new Particle(e.x, e.y));
+            }
         });
 
-        // More frequent auto-drops to ensure it's visible on load
+        // Heavy auto-drops to create the "swirling cloud" effect
         setInterval(() => {
-            if (particles.length < 40) {
+            if (particles.length < 50) {
                 particles.push(new Particle(Math.random() * canvas.width, -100, true));
             }
-        }, 400);
+        }, 250);
 
         window.addEventListener('resize', init);
         init();

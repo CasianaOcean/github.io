@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>inkandinstinct | Global Marketing & Communications</title>
     
+    <link rel="icon" type="image/png" href="favicon.png">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Dancing+Script:wght@700&family=Inter:wght@300;600&display=swap" rel="stylesheet">
@@ -19,26 +21,42 @@
         body, html {
             margin: 0;
             padding: 0;
-            background-color: var(--paper-white);
+            background-color: #fff;
             color: var(--ink-black);
             font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
         }
 
-        /* Adjusted filter: lowered blur, increased contrast to make ink "pop" */
+        /* LAYER 1: The Slim Ink */
         #ink-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: -1;
-            filter: blur(12px) contrast(1.8); 
+            z-index: 1;
+            /* Sharp contrast with lower blur makes the "slimmer" lines stay defined */
+            filter: blur(4px) contrast(30); 
+            pointer-events: none;
+        }
+
+        /* LAYER 2: The Smoky atmosphere */
+        .smoke-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 2;
+            backdrop-filter: blur(35px) saturate(100%);
+            -webkit-backdrop-filter: blur(35px);
             pointer-events: none;
         }
 
         nav {
-            position: absolute;
+            position: fixed;
             width: 100%;
             padding: 30px 5%;
             display: flex;
@@ -47,74 +65,90 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 2px;
+            z-index: 100;
+            opacity: 0.8;
         }
 
         header {
             height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 80px 60px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
             text-align: center;
-            padding: 0 10%;
+            max-width: 900px;
+            width: 85%;
+            animation: cardFadeIn 1.2s ease-out;
+        }
+
+        @keyframes cardFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(3.5rem, 12vw, 7.5rem);
+            font-size: clamp(3.5rem, 12vw, 7rem);
             font-weight: 700;
             margin: 0;
-            letter-spacing: -3px;
+            letter-spacing: -4px;
+            line-height: 0.9;
         }
 
         .cursive {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(2rem, 6vw, 3.8rem);
+            font-size: clamp(2rem, 6vw, 4rem);
             color: var(--accent-red);
             display: block;
-            margin-top: 5px;
+            margin-top: 10px;
             margin-bottom: 40px;
         }
 
-        .intro-text {
-            max-width: 700px;
-            font-size: 1.25rem;
-            font-weight: 400;
+        .intro-text p {
+            font-size: 1.3rem;
+            font-weight: 300;
             line-height: 1.6;
+            margin-bottom: 30px;
+            color: #111;
         }
 
         .contact-link {
             display: inline-block;
-            margin-top: 20px;
             color: var(--ink-black);
             text-decoration: none;
-            font-weight: 600;
-            border-bottom: 2px solid var(--accent-red);
+            font-weight: 700;
+            border-bottom: 3px solid var(--accent-red);
             padding-bottom: 2px;
+            transition: all 0.3s;
+            font-size: 1.1rem;
         }
 
-        .main-content {
-            background: white;
-            padding: 100px 10%;
-            position: relative;
-            z-index: 2;
+        .contact-link:hover {
+            letter-spacing: 1px;
+            border-bottom-color: var(--ink-black);
         }
 
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 4rem;
-        }
-
-        .service-card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
+        @media (max-width: 768px) {
+            .glass-card { padding: 40px 20px; }
+            h1 { letter-spacing: -2px; }
         }
     </style>
 </head>
 <body>
 
     <canvas id="ink-canvas"></canvas>
+    <div class="smoke-overlay"></div>
 
     <nav>
         <div>INKANDINSTINCT.XYZ</div>
@@ -122,36 +156,17 @@
     </nav>
 
     <header>
-        <h1>inkandinstinct</h1>
-        <span class="cursive">strategy with soul.</span>
-        
-        <div class="intro-text">
-            <p>Marketing and Communications helping brands with strategy,<br> 
-            storytelling, and digital presence... in web2 and web3.</p>
-            <a href="mailto:casiana@inkandinstinct.xyz" class="contact-link">casiana@inkandinstinct.xyz</a>
+        <div class="glass-card">
+            <h1>inkandinstinct</h1>
+            <span class="cursive">strategy with soul.</span>
+            
+            <div class="intro-text">
+                <p>Marketing and Communications helping brands with strategy,<br> 
+                storytelling, and digital presence... in web2 and web3.</p>
+                <a href="mailto:casiana@inkandinstinct.xyz" class="contact-link">casiana@inkandinstinct.xyz</a>
+            </div>
         </div>
     </header>
-
-    <main class="main-content">
-        <div class="services-grid">
-            <div class="service-card">
-                <h3>Brand Identity</h3>
-                <p>Visual and verbal systems for modern markets.</p>
-            </div>
-            <div class="service-card">
-                <h3>Reputation</h3>
-                <p>Strategic narrative and perception management.</p>
-            </div>
-            <div class="service-card">
-                <h3>Public Speaking</h3>
-                <p>Coaching for leadership and stage presence.</p>
-            </div>
-            <div class="service-card">
-                <h3>PR & Marketing</h3>
-                <p>Bridging technology and human storytelling.</p>
-            </div>
-        </div>
-    </main>
 
     <script>
         const canvas = document.getElementById('ink-canvas');
@@ -167,22 +182,25 @@
             constructor(x, y, isAuto = false) {
                 this.x = x;
                 this.y = y;
-                // Made particles larger and darker
-                this.size = isAuto ? Math.random() * 80 + 40 : Math.random() * 40 + 20;
-                this.speedX = Math.random() * 2 - 1;
-                this.speedY = Math.random() * 1.2 + 0.5;
-                this.opacity = 0.6; // Increased from 0.3
+                // Slimmer base size
+                this.size = isAuto ? Math.random() * 30 + 10 : Math.random() * 15 + 5;
+                // Faster vertical speed, very little horizontal drift
+                this.speedX = (Math.random() - 0.5) * 0.5; 
+                this.speedY = Math.random() * 2 + 1;
+                this.opacity = isAuto ? 0.7 : 0.9; 
             }
             update() {
                 this.y += this.speedY;
                 this.x += this.speedX;
-                this.size += 0.5;
+                // Slow growth to maintain "slim" profile longer
+                this.size += 0.4; 
                 this.opacity -= 0.002;
             }
             draw() {
                 ctx.fillStyle = `rgba(10, 10, 12, ${this.opacity})`;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                // We draw an ellipse instead of a circle to make it look "stretched"
+                ctx.ellipse(this.x, this.y, this.size * 0.6, this.size * 1.5, 0, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
@@ -200,17 +218,18 @@
             requestAnimationFrame(animate);
         }
 
-        // Mouse trigger
         window.addEventListener('mousemove', (e) => {
-            if (Math.random() > 0.7) particles.push(new Particle(e.x, e.y));
+            if (Math.random() > 0.4) {
+                particles.push(new Particle(e.x, e.y));
+            }
         });
 
-        // More frequent auto-drops to ensure it's visible on load
+        // Constant slimmer plumes
         setInterval(() => {
-            if (particles.length < 40) {
-                particles.push(new Particle(Math.random() * canvas.width, -100, true));
+            if (particles.length < 100) {
+                particles.push(new Particle(Math.random() * canvas.width, -50, true));
             }
-        }, 400);
+        }, 80);
 
         window.addEventListener('resize', init);
         init();

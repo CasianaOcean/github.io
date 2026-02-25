@@ -3,237 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>inkandinstinct | Global Marketing & Communications</title>
-    
-    <link rel="icon" type="image/png" href="favicon.png">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Dancing+Script:wght@700&family=Inter:wght@300;600&display=swap" rel="stylesheet">
-
+    <title>InkSalt | Seasoning Your Brand's Narrative</title>
     <style>
         :root {
-            --ink-black: #0a0a0c;
-            --paper-white: #fcfaf7;
-            --accent-red: #8b0000;
+            --burgundy: #8b0000;
+            --ink-black: #1a1a1a;
+            --salt-white: #f4f4f2;
         }
 
-        body, html {
+        body {
             margin: 0;
-            padding: 0;
-            background-color: #fff;
+            background-color: var(--salt-white);
+            background-image: url("https://www.transparenttextures.com/patterns/exclusive-paper.png");
+            font-family: 'Inter', -apple-system, sans-serif;
             color: var(--ink-black);
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            width: 100vw;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        /* LAYER 1: The Slim Ink */
-        #ink-canvas {
+        canvas#saltCanvas {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            pointer-events: none;
             z-index: 1;
-            /* Sharp contrast with lower blur makes the "slimmer" lines stay defined */
-            filter: blur(4px) contrast(30); 
-            pointer-events: none;
         }
 
-        /* LAYER 2: The Smoky atmosphere */
-        .smoke-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 2;
-            backdrop-filter: blur(35px) saturate(100%);
-            -webkit-backdrop-filter: blur(35px);
-            pointer-events: none;
-        }
-
-        nav {
-            position: fixed;
-            width: 100%;
-            padding: 30px 5%;
-            display: flex;
-            justify-content: space-between;
-            box-sizing: border-box;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            z-index: 100;
-            opacity: 0.8;
-        }
-
-        header {
+        /* Hero Section */
+        .hero-container {
             height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 80px 60px;
-            border-radius: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+            justify-content: center;
             text-align: center;
-            max-width: 900px;
-            width: 85%;
-            animation: cardFadeIn 1.2s ease-out;
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
         }
 
-        @keyframes cardFadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .hero-image {
+            width: 100%;
+            max-width: 900px;
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.12));
+            margin-bottom: -60px;
+            transition: transform 0.1s ease-out;
+            pointer-events: none;
         }
 
         h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3.5rem, 12vw, 7rem);
-            font-weight: 700;
+            font-family: 'Georgia', serif;
+            font-size: clamp(3.5rem, 12vw, 8rem);
             margin: 0;
-            letter-spacing: -4px;
+            letter-spacing: -3px;
             line-height: 0.9;
         }
 
-        .cursive {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(2rem, 6vw, 4rem);
-            color: var(--accent-red);
-            display: block;
-            margin-top: 10px;
-            margin-bottom: 40px;
+        .salt-text { color: var(--burgundy); font-weight: 300; }
+
+        .tagline {
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            margin-top: 1.5rem;
+            opacity: 0.6;
         }
 
-        .intro-text p {
-            font-size: 1.3rem;
-            font-weight: 300;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            color: #111;
+        /* Services Grid */
+        .services-wrapper {
+            max-width: 1200px;
+            margin: 0 auto 150px auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 3;
         }
 
-        .contact-link {
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .service-card {
+            padding: 4rem 2rem;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            border-radius: 2px;
+        }
+
+        .service-card:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-10px);
+            border: 1px solid var(--burgundy);
+        }
+
+        .service-card h3 {
+            font-family: 'Georgia', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--ink-black);
+            color: var(--salt-white);
+            padding: 120px 2rem;
+            text-align: center;
+            z-index: 4;
+            position: relative;
+        }
+
+        .contact-btn {
             display: inline-block;
-            color: var(--ink-black);
+            padding: 1.5rem 3.5rem;
+            border: 1px solid var(--burgundy);
+            color: white;
             text-decoration: none;
-            font-weight: 700;
-            border-bottom: 3px solid var(--accent-red);
-            padding-bottom: 2px;
-            transition: all 0.3s;
-            font-size: 1.1rem;
+            font-size: 0.8rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            transition: 0.4s;
         }
 
-        .contact-link:hover {
-            letter-spacing: 1px;
-            border-bottom-color: var(--ink-black);
-        }
-
-        @media (max-width: 768px) {
-            .glass-card { padding: 40px 20px; }
-            h1 { letter-spacing: -2px; }
+        .contact-btn:hover {
+            background: var(--burgundy);
+            box-shadow: 0 0 30px rgba(139, 0, 0, 0.4);
         }
     </style>
 </head>
 <body>
 
-    <canvas id="ink-canvas"></canvas>
-    <div class="smoke-overlay"></div>
+    <canvas id="saltCanvas"></canvas>
 
-    <nav>
-        <div>INKANDINSTINCT.XYZ</div>
-        <div>GLOBAL COMMUNICATIONS</div>
-    </nav>
+    <div class="hero-container">
+        <img src="hero-gems.png" class="hero-image" id="hero" alt="InkSalt Identity">
+        <h1>INK<span class="salt-text">SALT</span></h1>
+        <p class="tagline">Defined by Grit. Refined by Ink.</p>
+    </div>
 
-    <header>
-        <div class="glass-card">
-            <h1>inkandinstinct</h1>
-            <span class="cursive">strategy with soul.</span>
-            
-            <div class="intro-text">
-                <p>Marketing and Communications helping brands with strategy,<br> 
-                storytelling, and digital presence... in web2 and web3.</p>
-                <a href="mailto:casiana@inkandinstinct.xyz" class="contact-link">casiana@inkandinstinct.xyz</a>
-            </div>
+    <div class="services-wrapper">
+    <div class="services-grid">
+        <div class="service-card">
+            <span class="service-number">01</span>
+            <h3>Public Speaking</h3>
+            <p>Mastering the message. We refine your delivery and identify the precise angles to command any conversation.</p>
         </div>
-    </header>
+        <div class="service-card">
+            <span class="service-number">02</span>
+            <h3>Brand Identity</h3>
+            <p>The permanent mark. Designing the visual systems and verbal calls to action that define your brand’s raw soul.</p>
+        </div>
+        <div class="service-card">
+            <span class="service-number">03</span>
+            <h3>Events</h3>
+            <p>Online and off. We engineer curated events that serve as the essential seasoning for your brand experience.</p>
+        </div>
+        <div class="service-card">
+            <span class="service-number">04</span>
+            <h3>Community Growth</h3>
+            <p>Resilient growth across Web2 landscapes. We cultivate loyal audiences into self-sustaining advocates.</p>
+        </div>
+        <div class="service-card">
+            <span class="service-number">05</span>
+            <h3>Web & CMS</h3>
+            <p>Bespoke web creation and ongoing CMS support. Building high-resolution foundations for your digital presence.</p>
+        </div>
+        <div class="service-card">
+            <span class="service-number">06</span>
+            <h3>Automations</h3>
+            <p>Intelligent workflows for X, Reddit, and news cycles. Filtering the noise to present your product with precision.</p>
+        </div>
+    </div>
+</div>
+
+    <footer>
+        <h2 style="font-family: 'Georgia', serif; font-size: 3.5rem; margin-bottom: 4rem;">Essential Strategy.<br>Fluid Creativity.</h2>
+        <a href="mailto:casiana@inkandinstinct.xyz" class="contact-btn">Start a Project</a>
+        <p style="margin-top: 6rem; font-size: 0.65rem; opacity: 0.3; letter-spacing: 2px;">© 2026 INKSALT AGENCY</p>
+    </footer>
 
     <script>
-        const canvas = document.getElementById('ink-canvas');
+        // --- Salt Particle Animation ---
+        const canvas = document.getElementById('saltCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
-        function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
 
         class Particle {
-            constructor(x, y, isAuto = false) {
-                this.x = x;
-                this.y = y;
-                // Slimmer base size
-                this.size = isAuto ? Math.random() * 30 + 10 : Math.random() * 15 + 5;
-                // Faster vertical speed, very little horizontal drift
-                this.speedX = (Math.random() - 0.5) * 0.5; 
-                this.speedY = Math.random() * 2 + 1;
-                this.opacity = isAuto ? 0.7 : 0.9; 
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.5;
+                this.speedY = Math.random() * 0.4 + 0.1;
+                this.opacity = Math.random() * 0.4;
             }
             update() {
                 this.y += this.speedY;
-                this.x += this.speedX;
-                // Slow growth to maintain "slim" profile longer
-                this.size += 0.4; 
-                this.opacity -= 0.002;
+                if (this.y > canvas.height) this.y = -10;
             }
             draw() {
-                ctx.fillStyle = `rgba(10, 10, 12, ${this.opacity})`;
-                ctx.beginPath();
-                // We draw an ellipse instead of a circle to make it look "stretched"
-                ctx.ellipse(this.x, this.y, this.size * 0.6, this.size * 1.5, 0, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.fillRect(this.x, this.y, this.size, this.size);
             }
         }
-
+        for (let i = 0; i < 120; i++) particles.push(new Particle());
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                if (particles[i].opacity <= 0) {
-                    particles.splice(i, 1);
-                    i--;
-                }
-            }
+            particles.forEach(p => { p.update(); p.draw(); });
             requestAnimationFrame(animate);
         }
-
-        window.addEventListener('mousemove', (e) => {
-            if (Math.random() > 0.4) {
-                particles.push(new Particle(e.x, e.y));
-            }
-        });
-
-        // Constant slimmer plumes
-        setInterval(() => {
-            if (particles.length < 100) {
-                particles.push(new Particle(Math.random() * canvas.width, -50, true));
-            }
-        }, 80);
-
-        window.addEventListener('resize', init);
-        init();
         animate();
+
+        // --- Mouse Parallax ---
+        window.addEventListener('mousemove', (e) => {
+            const x = (e.clientX - window.innerWidth/2) / 45;
+            const y = (e.clientY - window.innerHeight/2) / 45;
+            document.getElementById('hero').style.transform = `translate(${x}px, ${y}px)`;
+        });
     </script>
 </body>
 </html>
